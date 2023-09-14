@@ -110,7 +110,7 @@ export class Manager {
     }
 }
 
-type RemoveListingDTO =
+export type RemoveListingDTO =
     | {
           hash: string;
       }
@@ -121,21 +121,24 @@ type RemoveListingDTO =
           item: Record<string, unknown>;
       };
 
-interface CreateListingDTO {
+export interface CreateListingDTO {
     listing: BpCreateListingDTO;
     priority?: number;
     force?: boolean;
 }
 
-type BpCreateListingDTO = {
+export type BpCreateListingDTO = {
     currencies: TF2Currencies;
+    intent: 0 | 1;
     offers?: 0 | 1;
     buyout?: 0 | 1;
     promoted?: 0 | 1;
     details?: string;
-} & ({ id: string } | { item: Record<string, unknown> });
+    id?: string;
+    item?: Record<string, unknown>;
+};
 
-type DesiredListing = {
+export type DesiredListing = {
     hash: string;
     id: string | null;
     updatedAt: number;
