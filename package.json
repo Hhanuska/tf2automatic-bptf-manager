@@ -6,7 +6,8 @@
     "scripts": {
         "build": "npx tsc",
         "prepare": "npx tsc",
-        "prepack": "npx tsc"
+        "prepack": "npx tsc",
+        "postinstall": "npx tsc"
     },
     "author": "Hhanuska",
     "license": "MIT",
