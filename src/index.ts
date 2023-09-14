@@ -1,5 +1,5 @@
 import SchemaManager from '@tf2autobot/tf2-schema';
-import { BpCreateListingDTO, Manager, RemoveListingDTO } from './classes/manager';
+import { BpCreateListingDTO, CreateListingDTO, Manager, RemoveListingDTO } from './classes/manager';
 import TF2Currencies from '@tf2autobot/tf2-currencies';
 import SKU from '@tf2autobot/tf2-sku';
 
@@ -21,6 +21,16 @@ export class ListingManager {
     // { [sku: string]: assetid }
     private sellListings: { [sku: string]: string } = {};
 
+    private queue: {
+        create: CreateListingDTO[];
+        delete: RemoveListingDTO[];
+    } = {
+        create: [],
+        delete: []
+    };
+
+    private handleQueueInterval = setInterval(this.handleQueue.bind(this), 250);
+
     constructor(options: ConstructorOptions) {
         this.steamid = options.steamid;
         this.token = options.token;
@@ -28,6 +38,24 @@ export class ListingManager {
         this.schema = options.schema;
 
         this.manager = new Manager(`http://${options.host}:${options.port}`, this.steamid);
+    }
+
+    async handleQueue() {
+        const createBatch = this.queue.create.splice(0, 1000);
+        const deleteBatch = this.queue.delete.splice(0, 1000);
+
+        try {
+            if (createBatch.length > 0) {
+                await this.manager.addDesiredListings(createBatch);
+            }
+            if (deleteBatch.length > 0) {
+                await this.manager.removeDesiredListings(deleteBatch);
+            }
+        } catch (err) {
+            // readd items to queue
+            this.queue.create = createBatch.concat(this.queue.create);
+            this.queue.delete = deleteBatch.concat(this.queue.delete);
+        }
     }
 
     async init(callback) {
@@ -80,7 +108,7 @@ export class ListingManager {
 
         const skuArr = formattedArr.map(formatted => formatted.sku);
 
-        const createDtoArr = formattedArr.map((formatted, index) => {
+        const createDtoArr: CreateListingDTO[] = formattedArr.map((formatted, index) => {
             // sku should be undefined if we want multiple sell orders for the same item
             // eg. autobot sell item by id (!add id=assetid)
             if (formatted.intent === 1 && formatted.sku) {
@@ -101,16 +129,13 @@ export class ListingManager {
             };
         });
 
-        this.manager
-            .addDesiredListings(createDtoArr)
-            .then(desiredListings => {
-                formattedArr.forEach((formatted, index) => {
-                    if (formatted.intent === 1 && formatted.id) {
-                        this.sellListings[skuArr[index]] = formatted.id;
-                    }
-                });
-            })
-            .catch(err => setTimeout(this.createListings.bind(this, listings), 1000));
+        formattedArr.forEach((formatted, index) => {
+            if (formatted.intent === 1 && formatted.id) {
+                this.sellListings[skuArr[index]] = formatted.id;
+            }
+        });
+
+        this.queue.create.push(...createDtoArr);
     }
 
     /**
@@ -140,16 +165,13 @@ export class ListingManager {
             return { item: this._formatItem({ sku: listing.sku }) };
         });
 
-        this.manager
-            .removeDesiredListings(formattedArr)
-            .then(() => {
-                listings.forEach(listing => {
-                    if (listing.intent === 1 && listing.sku) {
-                        delete this.sellListings[listing.sku];
-                    }
-                });
-            })
-            .catch(err => setTimeout(this.removeListings.bind(this, listings)));
+        listings.forEach(listing => {
+            if (listing.intent === 1 && listing.sku) {
+                delete this.sellListings[listing.sku];
+            }
+        });
+
+        this.queue.delete.push(...formattedArr);
     }
 
     /**
@@ -163,11 +185,13 @@ export class ListingManager {
     async removeAllListings() {
         const listings = await this.manager.getDesiredListings();
 
-        await this.manager.removeDesiredListings(
-            listings.map(listing => ({
+        this.queue.delete.push(
+            ...listings.map(listing => ({
                 hash: listing.hash
             }))
         );
+
+        this.sellListings = {};
     }
 
     _formatListing(listing: CreateListing) {
