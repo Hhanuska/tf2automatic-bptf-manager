@@ -477,6 +477,13 @@ export class ListingManager {
 
         return formatItem;
     }
+
+    async shutdown() {
+        clearInterval(this._updateInventoryInterval);
+        clearInterval(this.handleQueueInterval);
+        this.ready = false;
+        await this.manager.stopAgent();
+    }
 }
 
 interface ConstructorOptions {
