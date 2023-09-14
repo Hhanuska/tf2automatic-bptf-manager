@@ -4,9 +4,8 @@
     "description": "",
     "main": "dist/index.js",
     "scripts": {
-        "build": "tsc",
-        "prepare": "npx tsc",
-        "start": "node dist/index.js"
+        "build": "npx tsc",
+        "prepare": "npx tsc"
     },
     "author": "Hhanuska",
     "license": "MIT",
