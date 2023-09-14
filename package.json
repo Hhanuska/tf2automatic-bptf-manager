@@ -1,17 +1,20 @@
 {
-  "name": "tf2automatic-bptf-manager",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Hhanuska",
-  "license": "MIT",
-  "dependencies": {
-    "@tf2autobot/tf2-currencies": "^2.0.1",
-    "@tf2autobot/tf2-schema": "^4.2.14",
-    "@tf2autobot/tf2-sku": "^2.0.4",
-    "axios": "^1.5.0"
-  }
+    "name": "tf2automatic-bptf-manager",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "prepare": "tsc",
+        "start": "node dist/index.js"
+    },
+    "author": "Hhanuska",
+    "license": "MIT",
+    "dependencies": {
+        "@tf2autobot/tf2-currencies": "^2.0.1",
+        "@tf2autobot/tf2-schema": "^4.2.14",
+        "@tf2autobot/tf2-sku": "^2.0.4",
+        "axios": "^1.5.0",
+        "typescript": "^5.2.2"
+    }
 }
