@@ -5,9 +5,7 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "npx tsc",
-        "prepare": "npx tsc",
-        "prepack": "npx tsc",
-        "postinstall": "npx tsc"
+        "prepare": "npx tsc"
     },
     "author": "Hhanuska",
     "license": "MIT",
