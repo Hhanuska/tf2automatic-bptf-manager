@@ -16,8 +16,9 @@
         "strictNullChecks": false,
         "typeRoots": ["./types/modules", "./node_modules/@types"],
         "esModuleInterop": true,
-        "sourceMap": true,
-        "forceConsistentCasingInFileNames": true
+        "sourceMap": false,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true
     },
     "exclude": ["./node_modules", "**/__mocks__/*", "**/__tests__/*"],
     "include": ["./src"]
