@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Hhanuska",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@tf2autobot/tf2-currencies": "^2.0.1",
+    "@tf2autobot/tf2-schema": "^4.2.14",
+    "axios": "^1.5.0"
+  }
 }
