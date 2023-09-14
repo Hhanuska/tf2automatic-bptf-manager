@@ -185,11 +185,11 @@ export class ListingManager {
     async removeAllListings() {
         const listings = await this.manager.getDesiredListings();
 
-        this.queue.delete.push(
-            ...listings.map(listing => ({
-                hash: listing.hash
-            }))
-        );
+        while (listings.length) {
+            const batch = listings.splice(0, 1000);
+
+            await this.manager.removeDesiredListings(batch.map(listing => ({ hash: listing.hash })));
+        }
 
         this.sellListings = {};
     }
@@ -482,7 +482,8 @@ export class ListingManager {
         clearInterval(this._updateInventoryInterval);
         clearInterval(this.handleQueueInterval);
         this.ready = false;
-        await this.manager.stopAgent();
+
+        await this.removeAllListings();
     }
 }
 
