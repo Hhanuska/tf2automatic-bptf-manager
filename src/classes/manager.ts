@@ -66,7 +66,7 @@ export class Manager {
         return (
             await this.axios({
                 method: 'POST',
-                url: `/listings/${this.steamid}/limits`
+                url: `/listings/${this.steamid}/limits/refresh`
             })
         ).data;
     }
