@@ -23,7 +23,7 @@ export class Manager {
         return (
             await this.axios({
                 method: 'POST',
-                url: '/tolens',
+                url: '/tokens',
                 data: {
                     steamid64: this.steamid,
                     value: token

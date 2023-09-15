@@ -4,7 +4,7 @@ import TF2Currencies from '@tf2autobot/tf2-currencies';
 import SKU from '@tf2autobot/tf2-sku';
 
 export class ListingManager {
-    private manager: Manager;
+    public manager: Manager;
 
     private steamid: string;
 
