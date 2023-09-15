@@ -108,6 +108,7 @@ export class ListingManager {
 
         const skuArr = formattedArr.map(formatted => formatted.sku);
 
+        const removeDtoArr: RemoveListingDTO[] = [];
         const createDtoArr: CreateListingDTO[] = formattedArr.map((formatted, index) => {
             // sku should be undefined if we want multiple sell orders for the same item
             // eg. autobot sell item by id (!add id=assetid)
@@ -115,8 +116,12 @@ export class ListingManager {
                 // if intent is sell, check if we already have a sell listing for sku
                 // to make sure we don't create multiple sell listings for the same sku
                 if (this.sellListings[formatted.sku] && formatted.id !== this.sellListings[formatted.sku]) {
-                    // change assetid to the id of the already exisiting listing
-                    formatted.id = this.sellListings[formatted.sku];
+                    if (!formatted.forceId) {
+                        // change assetid to the id of the already exisiting listing
+                        formatted.id = this.sellListings[formatted.sku];
+                    } else {
+                        removeDtoArr.push({ id: this.sellListings[formatted.sku] });
+                    }
                 }
             }
 
@@ -135,6 +140,7 @@ export class ListingManager {
             }
         });
 
+        this.queue.delete.push(...removeDtoArr);
         this.queue.create.push(...createDtoArr);
     }
 
@@ -507,7 +513,14 @@ export interface CreateListing {
     offers?: 0 | 1;
     buyout?: 0 | 1;
     priority?: number;
+    /** Force listing to be created even if it already exists */
     force?: boolean;
+    /**
+     * SELL ORDERS ONLY (intent === 1)
+     * Force the given assetid to be used
+     * Remove the old sell listing for the given sku if exists
+     */
+    forceId?: boolean;
 }
 
 interface FormattedListing extends CreateListing {
