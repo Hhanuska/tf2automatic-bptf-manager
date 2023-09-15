@@ -125,10 +125,11 @@ export class ListingManager {
                 }
             }
 
-            delete formatted.sku;
+            const formattedCopy = { ...formatted };
+            delete formattedCopy.sku;
 
             return {
-                listing: formatted,
+                listing: formattedCopy,
                 priority: listings[index].priority,
                 force: listings[index].force
             };
