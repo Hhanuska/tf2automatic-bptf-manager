@@ -135,7 +135,7 @@ export class ListingManager {
         });
 
         formattedArr.forEach((formatted, index) => {
-            if (formatted.intent === 1 && formatted.id) {
+            if (formatted.intent === 1 && formatted.sku) {
                 this.sellListings[skuArr[index]] = formatted.id;
             }
         });
