@@ -207,7 +207,7 @@ export class ListingManager {
     _formatListing(listing: CreateListing) {
         let formatted: FormattedListing = { ...listing };
         if (listing.intent == 0) {
-            if (listing.sku) {
+            if (!listing.sku) {
                 return null;
             }
 
