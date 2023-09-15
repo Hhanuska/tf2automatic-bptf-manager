@@ -152,6 +152,10 @@ export class ListingManager {
         return this.createListings([listing]);
     }
 
+    getSellListingId(sku: string) {
+        return this.sellListings[sku] ?? null;
+    }
+
     removeListings(listings: RemoveListing[]) {
         if (!this.ready) {
             throw new Error('Module has not been successfully initialized');
