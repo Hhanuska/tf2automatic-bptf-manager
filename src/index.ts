@@ -170,6 +170,7 @@ export class ListingManager {
                 if (listing.id) {
                     returnArr.push({ id: listing.id });
                 }
+                return returnArr;
             }
 
             return { item: this._formatItem({ sku: listing.sku }) };
