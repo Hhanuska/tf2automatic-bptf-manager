@@ -152,7 +152,7 @@ export class ListingManager {
         return this.createListings([listing]);
     }
 
-    getSellListingId(sku: string) {
+    getSellListingAssetid(sku: string) {
         return this.sellListings[sku] ?? null;
     }
 
