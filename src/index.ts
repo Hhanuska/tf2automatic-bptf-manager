@@ -495,6 +495,7 @@ export class ListingManager {
         clearInterval(this.handleQueueInterval);
         this.ready = false;
 
+        await this.manager.stopAgent();
         await this.removeAllListings();
     }
 }
