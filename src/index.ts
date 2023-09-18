@@ -41,8 +41,8 @@ export class ListingManager {
     }
 
     async handleQueue() {
-        const createBatch = this.queue.create.splice(0, 100);
-        const deleteBatch = this.queue.delete.splice(0, 500);
+        const createBatch = this.queue.create.splice(0, 1000);
+        const deleteBatch = this.queue.delete.splice(0, 1000);
 
         try {
             if (createBatch.length > 0) {
@@ -201,7 +201,7 @@ export class ListingManager {
         const listings = await this.manager.getDesiredListings();
 
         while (listings.length) {
-            const batch = listings.splice(0, 500);
+            const batch = listings.splice(0, 1000);
 
             await this.manager.removeDesiredListings(batch.map(listing => ({ hash: listing.hash })));
         }
