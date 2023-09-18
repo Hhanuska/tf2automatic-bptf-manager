@@ -127,6 +127,9 @@ export class ListingManager {
 
             const formattedCopy = { ...formatted };
             delete formattedCopy.sku;
+            delete formattedCopy.force;
+            delete formattedCopy.forceId;
+            delete formattedCopy.priority;
 
             return {
                 listing: formattedCopy,
